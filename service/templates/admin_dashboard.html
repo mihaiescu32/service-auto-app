@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Service</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+padding:20px;
+}
+
+h1{
+text-align:center;
+}
+
+.card{
+background:#222;
+padding:20px;
+margin:20px 0;
+border-radius:10px;
+}
+
+input,select{
+
+width:100%;
+padding:10px;
+margin-top:10px;
+font-size:18px;
+border-radius:6px;
+border:none;
+
+}
+
+button{
+
+margin-top:15px;
+padding:15px;
+font-size:20px;
+border:none;
+border-radius:10px;
+background:#2ecc71;
+color:white;
+width:100%;
+
+}
+
+.operatie{
+
+background:#333;
+padding:15px;
+margin-top:10px;
+border-radius:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🔧 Admin Service</h1>
+
+<a href="/logout/">Logout</a>
+<a href="{% url 'export_csv' %}">
+    <button type="button">📥 Export CSV</button>
+</a>
+
+<div class="card">
+
+<h2>Creează comandă</h2>
+
+<form method="post" action="/creeaza_comanda/">
+{% csrf_token %}
+
+<input name="client" placeholder="Client">
+
+<input name="masina" placeholder="Mașină">
+
+<button type="submit">Creează comandă</button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Adaugă operație</h2>
+
+<form method="post" action="/creeaza_operatie/">
+{% csrf_token %}
+
+<select name="comanda">
+
+{% for c in comenzi %}
+<option value="{{c.id}}">
+{{c.client}} - {{c.masina}}
+</option>
+{% endfor %}
+
+</select>
+
+<input name="piesa" placeholder="Piesa / Operație">
+
+<select name="mecanic">
+
+{% for m in mecanici %}
+<option value="{{m.id}}">
+{{m.nume}}
+</option>
+{% endfor %}
+
+</select>
+<input name="timp_standard" placeholder="Timp standard (minute)">
+
+<button type="submit">Adaugă operație</button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Operații active</h2>
+
+{% for op in operatii %}
+
+<div class="operatie">
+
+<strong>{{op.piesa}}</strong><br>
+
+Client: {{op.comanda.client}}<br>
+
+Mașină: {{op.comanda.masina}}<br>
+
+Mecanic: {{op.mecanic.nume}}<br>
+
+Timp lucrat: {{op.durata_activa}} minute
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+
+</html>

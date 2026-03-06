@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Operații {{ mecanic.nume }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #111;
+            color: white;
+            padding: 15px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .operatie-card {
+            background: #222;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 22px;
+        }
+
+        button {
+            width: 100%;
+            font-size: 22px;
+            padding: 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .start { background: #2ecc71; }
+        .pause { background: #f39c12; }
+        .stop { background: #e74c3c; }
+        .resume { background: #3498db; }
+
+        .timer {
+            margin-top: 15px;
+            font-size: 18px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🔧 {{ mecanic.nume }}</h1>
+
+{% for op in operatii %}
+<div class="operatie-card">
+    <h2>{{ op.piesa }}</h2>
+    <p>Client: {{ op.comanda.client }}</p>
+    <p>Mașină: {{ op.comanda.masina }}</p>
+
+    {% if not op.start_time and not op.este_in_pauza %}
+        <a href="{% url 'start_operatie' op.id %}">
+            <button class="start">START</button>
+        </a>
+
+    {% elif op.start_time %}
+        <a href="{% url 'pauza_operatie' op.id %}">
+            <button class="pause">PAUZĂ</button>
+        </a>
+
+        <a href="{% url 'stop_operatie' op.id %}">
+            <button class="stop">FINALIZEAZĂ</button>
+        </a>
+
+    {% elif op.este_in_pauza %}
+        <a href="{% url 'start_operatie' op.id %}">
+            <button class="resume">CONTINUĂ</button>
+        </a>
+
+        <a href="{% url 'stop_operatie' op.id %}">
+            <button class="stop">FINALIZEAZĂ</button>
+        </a>
+    {% endif %}
+
+    <div class="timer">
+        Timp lucrat: {{ op.durata_activa }} minute
+    </div>
+</div>
+{% empty %}
+<p>Nu ai operații active.</p>
+{% endfor %}
+
+</body>
+</html>

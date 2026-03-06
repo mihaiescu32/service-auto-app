@@ -1,0 +1,77 @@
+{% load static %}
+<link rel="manifest" href="{% static 'manifest.json' %}">
+<script src="{% static 'sw.js' %}"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+<meta name="theme-color" content="#4CAF50">
+<link rel="apple-touch-icon" href="{% static 'icons/icon-192x192.png' %}">
+    <title>Dashboard</title>
+</head>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register("{% static 'sw.js' %}")
+    .then(function(registration) {
+      console.log("Service Worker registered:", registration);
+    })
+    .catch(function(error) {
+      console.log("Service Worker registration failed:", error);
+    });
+}
+</script>
+
+<body>
+
+<h1>Bine ai venit, {{ mecanic.nume }} 🔧</h1>
+
+<a href="/logout/">Logout</a>
+
+<h2>Operațiile tale:</h2>
+
+{% if operatii %}
+    <ul>
+        {% for operatie in operatii %}
+        <p>
+Timp total: {{ operatie.timp_total }}
+</p>
+
+{% if not operatie.finalizata %}
+
+    {% if not operatie.este_in_lucru %}
+        <a href="{% url 'start_operatie' operatie.id %}">
+            <button>Start</button>
+        </a>
+    {% else %}
+        <a href="{% url 'pauza_operatie' operatie.id %}">
+            <button>Pauza</button>
+        </a>
+    {% endif %}
+
+    <a href="{% url 'stop_operatie' operatie.id %}">
+        <button>Stop</button>
+    </a>
+
+{% else %}
+    <p>Finalizată ✅</p>
+{% endif %}
+            <li>
+                <strong>{{ operatie.titlu }}</strong><br>
+                {{ operatie.descriere }}<br>
+                Status:
+                {% if operatie.finalizata %}
+                    Finalizată ✅
+                {% else %}
+                    În lucru ⏳
+                {% endif %}
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Nu ai operații atribuite.</p>
+{% endif %}
+
+</body>
+</html>

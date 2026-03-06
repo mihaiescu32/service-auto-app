@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Selectează mecanicul</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+padding-top:40px;
+}
+
+h1{
+margin-bottom:40px;
+}
+
+button{
+width:80%;
+font-size:28px;
+padding:25px;
+margin:15px;
+border:none;
+border-radius:15px;
+background:#2ecc71;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#27ae60;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🔧 Selectează mecanicul</h1>
+
+{% for mecanic in mecanici %}
+
+<a href="/login_mecanic/{{ mecanic.id }}/">
+<button>
+
+{{ mecanic.nume }}
+
+</button>
+</a>
+
+{% endfor %}
+
+</body>
+</html>
